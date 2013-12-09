@@ -1,0 +1,45 @@
+/* General */
+
+* {
+  margin: 0px;
+  padding: 0px;
+  
+  font-family: Menlo, Consolas, 'Courier New', monospace;
+  font-size: 13px;
+  
+  background-color: #EFEFEF;
+}
+
+/* BitStamp link */
+
+p {
+  text-align: center;
+}
+
+a {
+  font-size: 10px;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Ticker table */
+
+table {
+  border-collapse: collapse;
+  margin: 30px auto;
+}
+
+td, th {
+  padding: 10px 20px 0px 20px;
+  border-right: 1px solid gray;
+  text-align: right;
+}
+
+/* Ending zeroes */
+
+.dim {
+  color: #CCCCCC;
+}

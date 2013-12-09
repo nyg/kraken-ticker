@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Kraken Ticker</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="style.css" type="text/css" />
+  </head>
+  
+  <body>
+    <table id="tickers">
+			<tr id="header">
+				<th></th>
+				<th>Last</th>
+				<th>Bid</th>
+				<th>Ask</th>
+				<th>Last Volume</th>
+				<th>Last 24H Volume</th>
+				<th>Last 24H VWAP</th>
+				<th>Last 24H Trade Count</th>
+				<th>Last 24H Low Price</th>
+				<th>Last 24H High Price</th>
+			</tr>
+    </table>
+    
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="util/jsonp.js"></script>
+		<script src="util/html.js"></script>
+		<script src="util/format.js"></script>
+		<script src="util/kraken.js"></script>
+		<script src="index.js"></script>
+  </body>
+</html>
