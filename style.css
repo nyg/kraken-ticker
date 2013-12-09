@@ -38,6 +38,14 @@ td, th {
   text-align: right;
 }
 
+th {
+  border-bottom: 1px solid gray;
+}
+
+td:last-child, th:last-child {
+  border-right: none;
+}
+
 /* Ending zeroes */
 
 .dim {
