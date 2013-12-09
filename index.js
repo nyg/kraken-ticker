@@ -3,7 +3,10 @@
 var apiUrlAssetPairs = 'https://api.kraken.com/0/public/AssetPairs',
     apiUrlTicker = 'https://api.kraken.com/0/public/Ticker?pair=';
 
-setInterval(function () {
+main();
+setInterval(main, 5000);
+
+function main () {
   
   getJSON(apiUrlAssetPairs, function (response) {
   
@@ -15,7 +18,7 @@ setInterval(function () {
     
     getTickerInformation(assetPairs)
   });
-}, 5000);
+}
 
 function getTickerInformation (assetPairs) {
   
