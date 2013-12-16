@@ -4,12 +4,13 @@ var apiUrlAssetPairs = 'https://api.kraken.com/0/public/AssetPairs',
     apiUrlTicker = 'https://api.kraken.com/0/public/Ticker?pair=';
 
 main();
-setInterval(main, 500);
+setInterval(main, 1000);
 
 function main () {
   
+  console.log('start...');
   getJSON(apiUrlAssetPairs, function (response) {
-  
+    
     var assetPairs = [];
     
     for (key in response.result) {
@@ -35,5 +36,6 @@ function getTickerInformation (assetPairs) {
     });
     
     setRowsToTable(createRows(tickers), 'tickers')
+    console.log('...end');
   });
 }
