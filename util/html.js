@@ -20,13 +20,15 @@ function createRows (arrayOfRows) {
 function setRowsToTable (rows, tableId) {
   
   var table = document.getElementById(tableId),
-      header = document.getElementById('header');
+      header1 = document.getElementById('header-1'),
+      header2 = document.getElementById('header-2');
   
   while (table.firstChild) {
     table.removeChild(table.firstChild);
   }
   
-  table.appendChild(header);
+  table.appendChild(header1);
+  table.appendChild(header2);
   
   for (var key in rows) {
     table.appendChild(rows[key]);

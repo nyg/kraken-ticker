@@ -3,22 +3,25 @@
   <head>
     <title>Kraken Ticker</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="style.css" type="text/css" />
+    <link rel="stylesheet" href="css/style.css" type="text/css" />
+		<link rel="stylesheet" href="css/ipad.css" type="text/css" />
   </head>
   
   <body>
     <table id="tickers">
-			<tr id="header">
-				<th></th>
-				<th>Last</th>
-				<th>Buying</th>
-				<th>Selling</th>
-				<th>Last Volume</th>
-				<th>Last 24H Volume</th>
-				<th>Last 24H VWAP</th>
-				<th>Last 24H Trade Count</th>
-				<th>Last 24H Low Price</th>
-				<th>Last 24H High Price</th>
+			<tr id="header-1">
+				<th rowspan="2" class="border-right"></th>
+				<th rowspan="2" colspan="2" class="border-right">Last Trade</th>
+				<th rowspan="2">Buying</th>
+				<th rowspan="2" class="border-right">Selling</th>
+				<th colspan="5">Last 24 Hours</th>
+			</tr>
+			<tr id="header-2">
+				<th>Volume</th>
+				<th>VWA</th>
+				<th>Trades</th>
+				<th>Lowest</th>
+				<th>Highest</th>
 			</tr>
     </table>
 		

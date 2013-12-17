@@ -41,8 +41,8 @@ function assetPair (s) {
   return s.replace(/[XZ]([A-Z]{3})[XZ]([A-Z]{3})/g, '$1/$2')
 }
 
-function ccy (n) {
-  return dimEndingZeroes(formatNumber(n, 8));
+function ccy (number, decimals) {
+  return dimEndingZeroes(formatNumber(number, decimals === undefined ? 5 : decimals));
 }
 
 function dimEndingZeroes (n) {
