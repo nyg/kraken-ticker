@@ -11,7 +11,7 @@ function getJSON(apiUrl, callback) {
       format: 'json'
     },
 
-    done: function(response) {
+    success: function(response) {
       callback($.parseJSON(response.query.results.body))
     }
   })
