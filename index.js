@@ -1,39 +1,55 @@
-/*_*/
-
 var apiUrlAssetPairs = 'https://api.kraken.com/0/public/AssetPairs',
-    apiUrlTicker = 'https://api.kraken.com/0/public/Ticker?pair=';
+    apiUrlTicker = 'https://api.kraken.com/0/public/Ticker?pair='
 
-main();
-setInterval(main, 1500);
+// retrieve data each 1.5 seconds
+setInterval(function () {
+    getAssetPairs()
+        .then(getTickers)
+        .then(updateUI)
+        .catch(error)
+}, 1500)
 
-function main () {
-  
-  getJSON(apiUrlAssetPairs, function (response) {
-    
-    var assetPairs = [];
-    
-    for (key in response.result) {
-      assetPairs.push(response.result[key].altname);
-    }
-    
-    getTickerInformation(assetPairs)
-  });
+/* Get all asset pairs. */
+function getAssetPairs() {
+    return nygFetch.getJSON(apiUrlAssetPairs).then(extractAssetPairs)
 }
 
-function getTickerInformation (assetPairs) {
-  
-  getJSON(apiUrlTicker + assetPairs.join(','), function (response) {
-    
-    var value, tickers = [];
-    
-    for (key in response.result) {
-      tickers.push(createTicker(key, response.result[key]));
-    }
-    
-    tickers.sort(function (a, b) {
-      return a.last24TradeCount > b.last24TradeCount ? -1 : a.last24TradeCount < b.last24TradeCount ? 1 : 0;
-    });
-    
+/* Get ticker data for all asset pairs. */
+function getTickers(assetPairs) {
+    return nygFetch.getJSON(apiUrlTicker + assetPairs.join(',')).then(extractTickers)
+}
+
+/* Creates the HTML tables with the retrieved data. */
+function updateUI(tickers) {
     setRowsToTable(createRows(tickers), 'tickers')
-  });
+}
+
+function extractAssetPairs(json) {
+
+    var assetPairs = []
+
+    for (key in json.result) {
+        assetPairs.push(json.result[key].altname)
+    }
+
+    return assetPairs
+}
+
+function extractTickers(json) {
+
+    var tickers = []
+
+    for (key in json.result) {
+        tickers.push(createTicker(key, json.result[key]))
+    }
+
+    tickers.sort(function(a, b) {
+        return a.last24TradeCount > b.last24TradeCount ? -1 : a.last24TradeCount < b.last24TradeCount ? 1 : 0
+    })
+
+    return tickers
+}
+
+function error(e) {
+    console.log("Error: ", e);
 }
