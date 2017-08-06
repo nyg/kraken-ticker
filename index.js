@@ -1,6 +1,8 @@
 var apiUrlAssetPairs = 'https://api.kraken.com/0/public/AssetPairs',
     apiUrlTicker = 'https://api.kraken.com/0/public/Ticker?pair='
 
+nygFetch.checkAvailability()
+
 // retrieve data each 1.5 seconds
 setInterval(function () {
     getAssetPairs()
@@ -11,12 +13,12 @@ setInterval(function () {
 
 /* Get all asset pairs. */
 function getAssetPairs() {
-    return nygFetch.getJSON(apiUrlAssetPairs).then(extractAssetPairs)
+    return nygFetch.fetchJSON(apiUrlAssetPairs, true).then(extractAssetPairs).catch(nygFetch.rethrowError)
 }
 
 /* Get ticker data for all asset pairs. */
 function getTickers(assetPairs) {
-    return nygFetch.getJSON(apiUrlTicker + assetPairs.join(',')).then(extractTickers)
+    return nygFetch.fetchJSON(apiUrlTicker + assetPairs.join(',')).then(extractTickers).catch(nygFetch.rethrowError)
 }
 
 /* Creates the HTML tables with the retrieved data. */
@@ -28,8 +30,8 @@ function extractAssetPairs(json) {
 
     var assetPairs = []
 
-    for (key in json.result) {
-        assetPairs.push(json.result[key].altname)
+    for (key in json.query.results.json.result) {
+        assetPairs.push(json.query.results.json.result[key].altname)
     }
 
     return assetPairs
@@ -39,8 +41,8 @@ function extractTickers(json) {
 
     var tickers = []
 
-    for (key in json.result) {
-        tickers.push(createTicker(key, json.result[key]))
+    for (key in json.query.results.json.result) {
+        tickers.push(createTicker(key, json.query.results.json.result[key]))
     }
 
     tickers.sort(function(a, b) {
