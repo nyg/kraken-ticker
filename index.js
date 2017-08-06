@@ -18,7 +18,7 @@ function getAssetPairs() {
 
 /* Get ticker data for all asset pairs. */
 function getTickers(assetPairs) {
-    return nygFetch.fetchJSON(apiUrlTicker + assetPairs.join(',')).then(extractTickers).catch(nygFetch.rethrowError)
+    return nygFetch.fetchJSON(apiUrlTicker + assetPairs.join(','), true).then(extractTickers).catch(nygFetch.rethrowError)
 }
 
 /* Creates the HTML tables with the retrieved data. */
@@ -27,28 +27,12 @@ function updateUI(tickers) {
 }
 
 function extractAssetPairs(json) {
-
-    var assetPairs = []
-
-    for (key in json.query.results.json.result) {
-        assetPairs.push(json.query.results.json.result[key].altname)
-    }
-
-    return assetPairs
+    return Object.keys(json.result).map(key => json.result[key].altname)
 }
 
 function extractTickers(json) {
-
-    var tickers = []
-
-    for (key in json.query.results.json.result) {
-        tickers.push(createTicker(key, json.query.results.json.result[key]))
-    }
-
-    tickers.sort(function(a, b) {
-        return a.last24TradeCount > b.last24TradeCount ? -1 : a.last24TradeCount < b.last24TradeCount ? 1 : 0
-    })
-
+    var tickers = Object.keys(json.result).map(key => createTicker(key, json.result[key]))
+    tickers.sort((a, b) => b.last24TradeCount - a.last24TradeCount)
     return tickers
 }
 
