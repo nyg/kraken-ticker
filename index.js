@@ -1,8 +1,6 @@
 var apiUrlAssetPairs = 'https://api.kraken.com/0/public/AssetPairs',
     apiUrlTicker = 'https://api.kraken.com/0/public/Ticker?pair='
 
-nygFetch.checkAvailability()
-
 // retrieve data each 1.5 seconds
 setInterval(function () {
     getAssetPairs()
@@ -11,14 +9,19 @@ setInterval(function () {
         .catch(error)
 }, 1500)
 
+function fetchJSON(url) {
+    return fetch(`https://api.allorigins.win/raw?url=${url}`)
+        .then(response => response.json())
+}
+
 /* Get all asset pairs. */
 function getAssetPairs() {
-    return nygFetch.fetchJSON(apiUrlAssetPairs, true).then(extractAssetPairs).catch(nygFetch.rethrowError)
+    return fetchJSON(apiUrlAssetPairs).then(extractAssetPairs)
 }
 
 /* Get ticker data for all asset pairs. */
 function getTickers(assetPairs) {
-    return nygFetch.fetchJSON(apiUrlTicker + assetPairs.join(','), true).then(extractTickers).catch(nygFetch.rethrowError)
+    return fetchJSON(apiUrlTicker + assetPairs.join(',')).then(extractTickers)
 }
 
 /* Creates the HTML tables with the retrieved data. */
