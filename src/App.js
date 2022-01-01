@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react"
-import { initWebSocket } from "./websocket"
+import { useEffect, useState } from 'react'
+import { initWebSocket } from './lib/websocket'
+import TickerTable from './components/ticker/table.js'
+import * as format from './utils/format.js'
 
 
 export default function App() {
@@ -10,9 +12,10 @@ export default function App() {
   const [assetPairs, setAssetPairs] = useState([])
 
   const sendTickerSubscription = ({ target: ws }) => {
+    console.log('Sending subscription to tickers')
     ws.send(JSON.stringify({
       event: 'subscribe',
-      pair: assetPairs.slice(0, 20),
+      pair: assetPairs,
       subscription: {
         name: 'ticker'
       }
@@ -24,15 +27,15 @@ export default function App() {
     setTickers(previousTicker => ({
       ...previousTicker,
       [pair]: {
-        askPrice: ticker.a[0],
-        bidPrice: ticker.b[0],
-        lastTradePrice: ticker.c[0],
-        lastTradeVolume: ticker.c[1],
-        last24Volume: ticker.v[1],
-        last24VWAP: ticker.p[1],
-        last24TradeCount: ticker.t[1],
-        last24LowPrice: ticker.l[1],
-        last24HighPrice: ticker.h[1]
+        askPrice: format.asDecimal(ticker.a[0]),
+        bidPrice: format.asDecimal(ticker.b[0]),
+        lastTradePrice: format.asDecimal(ticker.c[0]),
+        lastTradeVolume: format.asDecimal(ticker.c[1]),
+        last24Volume: format.asDecimal(ticker.v[1]),
+        last24VWAP: format.asDecimal(ticker.p[1]),
+        last24TradeCount: format.asInteger(ticker.t[1]),
+        last24LowPrice: format.asDecimal(ticker.l[1]),
+        last24HighPrice: format.asDecimal(ticker.h[1])
       }
     }))
   }
@@ -45,41 +48,11 @@ export default function App() {
         setAssetPairs(Object.values(json.result).map(pair => pair.wsname))
         initWebSocket({ onOpen: sendTickerSubscription, handleTickerMessage })
       })
-  }, [])
+  }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th rowSpan="2"></th>
-          <th rowSpan="2" colSpan="2">Last Trade</th>
-          <th rowSpan="2">Buying</th>
-          <th rowSpan="2">Selling</th>
-          <th colSpan="5">Last 24 Hours</th>
-        </tr>
-        <tr>
-          <th>Volume</th>
-          <th>VWA</th>
-          <th>Trades</th>
-          <th>Lowest</th>
-          <th>Highest</th>
-        </tr>
-      </thead>
-      <tbody>
-        {Object.keys(tickers).map(pair => (
-          <tr key={pair}>
-            <td>{pair}</td>
-            <td colSpan="2">{tickers[pair].lastTradePrice}</td>
-            <td>{tickers[pair].bidPrice}</td>
-            <td>{tickers[pair].askPrice}</td>
-            <td>{tickers[pair].last24Volume}</td>
-            <td>{tickers[pair].last24VWAP}</td>
-            <td>{tickers[pair].last24TradeCount}</td>
-            <td>{tickers[pair].last24LowPrice}</td>
-            <td>{tickers[pair].last24HighPrice}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div className="p-4 text-sm font-mono">
+      <TickerTable tickers={tickers} />
+    </div>
   )
 }

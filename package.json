@@ -1,31 +1,41 @@
 {
   "name": "kraken-ticker-react",
   "version": "1.0.0",
-  "dependencies": {
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "react-scripts": "5.0.0"
-  },
+  "description": "WebSocket Kraken ticker for all asset pairs",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/nyg/kraken-ticker.git"
+  },
+  "keywords": [
+    "kraken",
+    "cryptocurrency",
+    "ticker",
+    "websocket"
+  ],
+  "author": "nyg",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nyg/kraken-ticker/issues"
+  },
+  "homepage": "https://nyg.github.io/kraken-ticker/",
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
     ]
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-scripts": "5.0.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "10.4.1",
+    "postcss": "8.4.5",
+    "tailwindcss": "3.0.8"
   }
 }
