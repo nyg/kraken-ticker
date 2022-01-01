@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/kraken-ticker/static/css/main.7c530f1d.css",
+    "main.js": "/kraken-ticker/static/js/main.1da2aba1.js",
+    "index.html": "/kraken-ticker/index.html",
+    "main.7c530f1d.css.map": "/kraken-ticker/static/css/main.7c530f1d.css.map",
+    "main.1da2aba1.js.map": "/kraken-ticker/static/js/main.1da2aba1.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7c530f1d.css",
+    "static/js/main.1da2aba1.js"
+  ]
+}
