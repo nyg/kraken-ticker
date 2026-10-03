@@ -1,17 +1,50 @@
 @import "tailwindcss";
 
-:root {
-  --ticker-columns:
-    minmax(calc(14ch + 2rem), 14fr)
-    minmax(calc(16ch + 2rem), 16fr)
-    minmax(calc(19ch + 2rem), 19fr)
-    minmax(calc(16ch + 2rem), 16fr)
-    minmax(calc(16ch + 2rem), 16fr)
-    minmax(calc(13ch + 2rem), 13fr)
-    minmax(calc(21ch + 2rem), 21fr)
-    minmax(calc(16ch + 2rem), 16fr)
-    minmax(calc(7ch + 2rem), 7fr)
-    minmax(calc(16ch + 2rem), 16fr)
-    minmax(calc(16ch + 2rem), 16fr);
-  --ticker-min-width: calc(170ch + 22rem);
+/* Each breakpoint is the sum of the minimum widths of the columns it shows. */
+@theme {
+  --container-bid-ask: 85ch;
+  --container-low-high: 121ch;
+  --container-vwap-trades: 148ch;
+  --container-volume: 171ch;
+  --container-last-volume: 192ch;
+}
+
+table {
+  --pair: minmax(16ch, 14fr);
+  --price: minmax(18ch, 16fr);
+  --last-volume: minmax(21ch, 19fr);
+  --usd-volume: minmax(15ch, 13fr);
+  --volume: minmax(23ch, 21fr);
+  --trades: minmax(9ch, 7fr);
+
+  --ticker-columns: var(--pair) var(--price) var(--usd-volume);
+  --ticker-min-width: 49ch;
+
+  @variant @bid-ask {
+    --ticker-columns: var(--pair) var(--price) var(--price) var(--price) var(--usd-volume);
+  }
+
+  @variant @low-high {
+    --ticker-columns:
+      var(--pair) var(--price) var(--price) var(--price) var(--usd-volume)
+      var(--price) var(--price);
+  }
+
+  @variant @vwap-trades {
+    --ticker-columns:
+      var(--pair) var(--price) var(--price) var(--price) var(--usd-volume)
+      var(--price) var(--trades) var(--price) var(--price);
+  }
+
+  @variant @volume {
+    --ticker-columns:
+      var(--pair) var(--price) var(--price) var(--price) var(--usd-volume) var(--volume)
+      var(--price) var(--trades) var(--price) var(--price);
+  }
+
+  @variant @last-volume {
+    --ticker-columns:
+      var(--pair) var(--price) var(--last-volume) var(--price) var(--price) var(--usd-volume) var(--volume)
+      var(--price) var(--trades) var(--price) var(--price);
+  }
 }

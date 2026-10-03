@@ -7,18 +7,18 @@ export default memo(function TickerRow({ pair }) {
   const ticker = useTicker(pair)
 
   return (
-    <tr role="row" className="grid grid-cols-(--ticker-columns) h-7 contain-strict">
+    <tr role="row" className="grid grid-cols-(--ticker-columns) h-6 contain-strict [content-visibility:auto]">
       <TickerCell data={pair} />
       <TickerCell decimal data={ticker.lastTradePrice} />
-      <TickerCell decimal data={ticker.lastTradeVolume} />
-      <TickerCell decimal data={ticker.bidPrice} />
-      <TickerCell decimal data={ticker.askPrice} />
-      <TickerCell integer data={ticker.last24UsdVolume} />
-      <TickerCell decimal data={ticker.last24Volume} />
-      <TickerCell decimal data={ticker.last24VWAP} />
-      <TickerCell integer data={ticker.last24TradeCount} />
-      <TickerCell decimal data={ticker.last24LowPrice} />
-      <TickerCell decimal data={ticker.last24HighPrice} />
+      <TickerCell className="hidden @last-volume:block" decimal data={ticker.lastTradeVolume} />
+      <TickerCell className="hidden @bid-ask:block" decimal data={ticker.bidPrice} />
+      <TickerCell className="hidden @bid-ask:block" decimal data={ticker.askPrice} />
+      <TickerCell className="@max-low-high:border-r-0" integer data={ticker.last24UsdVolume} />
+      <TickerCell className="hidden @volume:block" decimal data={ticker.last24Volume} />
+      <TickerCell className="hidden @vwap-trades:block" decimal data={ticker.last24VWAP} />
+      <TickerCell className="hidden @vwap-trades:block" integer data={ticker.last24TradeCount} />
+      <TickerCell className="hidden @low-high:block" decimal data={ticker.last24LowPrice} />
+      <TickerCell className="hidden @low-high:block" decimal data={ticker.last24HighPrice} />
     </tr>
   )
 })
