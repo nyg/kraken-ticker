@@ -7,8 +7,8 @@ Demo @ https://nyg.github.io/kraken-ticker
 ## Development
 
 ```sh
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-`npm test` runs the unit tests and `npm run build` writes the production build to `dist`. Every push to `master` builds and deploys to GitHub Pages.
+`pnpm test` runs the unit tests and `pnpm build` writes the production build to `dist`. Every push to `master` builds and deploys to GitHub Pages.
