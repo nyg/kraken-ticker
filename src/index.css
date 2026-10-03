@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+:root {
+  --ticker-columns:
+    minmax(calc(14ch + 2rem), 14fr)
+    minmax(calc(16ch + 2rem), 16fr)
+    minmax(calc(19ch + 2rem), 19fr)
+    minmax(calc(16ch + 2rem), 16fr)
+    minmax(calc(16ch + 2rem), 16fr)
+    minmax(calc(13ch + 2rem), 13fr)
+    minmax(calc(21ch + 2rem), 21fr)
+    minmax(calc(16ch + 2rem), 16fr)
+    minmax(calc(7ch + 2rem), 7fr)
+    minmax(calc(16ch + 2rem), 16fr)
+    minmax(calc(16ch + 2rem), 16fr);
+  --ticker-min-width: calc(170ch + 22rem);
+}
