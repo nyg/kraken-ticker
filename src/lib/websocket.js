@@ -1,27 +1,62 @@
-export function initWebSocket({ onOpen, handleTickerMessage }) {
+const url = 'wss://ws.kraken.com'
 
-  const ws = new WebSocket('wss://ws.kraken.com')
+// Kraken silently ignores a subscription that lists every pair at once.
+const pairsPerSubscription = 100
 
-  ws.onerror = event => {
-    console.error('Received error', event)
-  }
+const initialReconnectDelayMs = 1000
+const maxReconnectDelayMs = 30000
 
-  ws.onmessage = event => {
-    if (event.type === 'message') {
+export function initWebSocket({ pairs, handleTickerMessage }) {
+
+  let ws
+  let reconnectTimer
+  let reconnectAttempts = 0
+  let closed = false
+
+  const connect = () => {
+    ws = new WebSocket(url)
+
+    ws.onopen = () => {
+      reconnectAttempts = 0
+      subscribeToTickers(ws, pairs)
+    }
+
+    ws.onmessage = event => {
       handleMessage(JSON.parse(event.data), { handleTickerMessage })
     }
-    else {
-      console.error('Unknown message', event)
+
+    ws.onerror = event => {
+      console.error('Received error', event)
+    }
+
+    ws.onclose = () => {
+      if (!closed) {
+        reconnectTimer = setTimeout(connect, reconnectDelay(reconnectAttempts++))
+      }
     }
   }
 
-  ws.onclose = event => {
-    console.log('Connection closed', event)
-  }
+  connect()
 
-  ws.onopen = event => {
-    console.log('Connection opened')
-    onOpen(event)
+  return () => {
+    closed = true
+    clearTimeout(reconnectTimer)
+    ws.close()
+  }
+}
+
+const reconnectDelay = attempts =>
+  Math.min(initialReconnectDelayMs * 2 ** attempts, maxReconnectDelayMs)
+
+const subscribeToTickers = (ws, pairs) => {
+  for (let start = 0; start < pairs.length; start += pairsPerSubscription) {
+    ws.send(JSON.stringify({
+      event: 'subscribe',
+      pair: pairs.slice(start, start + pairsPerSubscription),
+      subscription: {
+        name: 'ticker'
+      }
+    }))
   }
 }
 
@@ -30,13 +65,12 @@ const handleMessage = (data, { handleTickerMessage }) => {
 
     switch (data.event) {
       case 'subscriptionStatus':
-        // Ignore
+        if (data.status === 'error') {
+          console.error('Subscription error:', data.pair, data.errorMessage)
+        }
         break
       case 'heartbeat':
-        // Ignore
-        break
       case 'systemStatus':
-        console.log('System status:', data)
         break
       default:
         console.error('Unknown event:', data.event)

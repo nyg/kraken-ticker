@@ -11,3 +11,7 @@ const integerFormatter = new Intl.NumberFormat(locales, { minimumFractionDigits:
 export function asInteger(number) {
   return integerFormatter.format(number)
 }
+
+export function splitTrailingZeroes(decimal) {
+  return decimal.match(/^(?<value>.*\D0|.*[^0])(?<trailingZeroes>0*)$/).groups
+}
