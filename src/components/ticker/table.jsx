@@ -19,7 +19,7 @@ export default function TickerTable() {
 
   return (
     <table role="table" className="block w-full min-w-min text-right tabular-nums">
-      <thead role="rowgroup" className="grid grid-cols-(--ticker-columns) border-b border-gray-600">
+      <thead role="rowgroup" className="sticky top-0 z-10 grid grid-cols-(--ticker-columns) border-b border-gray-600 bg-white">
         <tr role="row" className="contents">
           <TickerHeader className="row-span-2" rowSpan="2">Pairs</TickerHeader>
           <TickerHeader className="@last-volume:col-span-2 border-b" colSpan="2">Last Trade</TickerHeader>
