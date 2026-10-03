@@ -33,7 +33,7 @@ export default function App() {
   }, [])
 
   return (
-    <div className="p-4 text-sm font-mono">
+    <div className="@container p-2 font-mono text-[clamp(10px,3vw,12px)]/4">
       <TickerTable />
     </div>
   )

@@ -24,7 +24,7 @@ const render = (data, { decimal, integer }) => {
 export default memo(function TickerCell({ className, decimal, integer, data }) {
 
   return (
-    <td role="cell" className={`px-4 py-1 border-gray-600 border-r last:border-0 ${className ?? ''}`}>
+    <td role="cell" className={`px-[1ch] py-1 border-gray-600 border-r last:border-0 ${className ?? ''}`}>
       {render(data, { decimal, integer })}
     </td>
   )
