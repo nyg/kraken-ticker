@@ -18,7 +18,7 @@ export default function TickerTable() {
   }, [mountedRowCount, pairs.length])
 
   return (
-    <table role="table" className="block w-full min-w-min text-right tabular-nums">
+    <table role="table" className="block w-full min-w-(--ticker-min-width) text-right tabular-nums">
       <thead role="rowgroup" className="sticky top-0 z-10 grid grid-cols-(--ticker-columns) border-b border-gray-600 bg-white">
         <tr role="row" className="contents">
           <TickerHeader className="row-span-2" rowSpan="2">Pairs</TickerHeader>

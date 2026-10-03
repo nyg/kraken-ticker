@@ -18,6 +18,7 @@ table {
   --trades: minmax(9ch, 7fr);
 
   --ticker-columns: var(--pair) var(--price) var(--usd-volume);
+  --ticker-min-width: 49ch;
 
   @variant @bid-ask {
     --ticker-columns: var(--pair) var(--price) var(--price) var(--price) var(--usd-volume);
