@@ -7,7 +7,7 @@ export default memo(function TickerRow({ pair }) {
   const ticker = useTicker(pair)
 
   return (
-    <tr role="row" className="grid grid-cols-(--ticker-columns) h-6 contain-strict">
+    <tr role="row" className="grid grid-cols-(--ticker-columns) h-6 contain-strict [content-visibility:auto]">
       <TickerCell data={pair} />
       <TickerCell decimal data={ticker.lastTradePrice} />
       <TickerCell className="hidden @last-volume:block" decimal data={ticker.lastTradeVolume} />
