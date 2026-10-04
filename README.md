@@ -1,6 +1,6 @@
 # kraken-ticker
 
-Live Kraken ticker for all asset pairs, sorted by 24-hour volume in USD. Prices stream over the Kraken WebSocket API.
+Live Kraken ticker for all asset pairs, sorted by 24-hour volume in USD. Prices stream over the Kraken WebSocket API v2.
 
 Demo @ https://nyg.github.io/kraken-ticker
 
