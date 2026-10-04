@@ -10,7 +10,6 @@ export default memo(function TickerRow({ pair }) {
     <tr role="row" className="grid grid-cols-(--ticker-columns) h-6 contain-strict [content-visibility:auto]">
       <TickerCell data={pair} />
       <TickerCell decimal data={ticker.lastTradePrice} />
-      <TickerCell className="hidden @last-volume:block" decimal data={ticker.lastTradeVolume} />
       <TickerCell className="hidden @bid-ask:block" decimal data={ticker.bidPrice} />
       <TickerCell className="hidden @bid-ask:block" decimal data={ticker.askPrice} />
       <TickerCell className="@max-low-high:border-r-0" integer data={ticker.last24UsdVolume} />

@@ -6,13 +6,11 @@
   --container-low-high: 121ch;
   --container-vwap-trades: 148ch;
   --container-volume: 171ch;
-  --container-last-volume: 192ch;
 }
 
 table {
   --pair: minmax(16ch, 14fr);
   --price: minmax(18ch, 16fr);
-  --last-volume: minmax(21ch, 19fr);
   --usd-volume: minmax(15ch, 13fr);
   --volume: minmax(23ch, 21fr);
   --trades: minmax(9ch, 7fr);
@@ -39,12 +37,6 @@ table {
   @variant @volume {
     --ticker-columns:
       var(--pair) var(--price) var(--price) var(--price) var(--usd-volume) var(--volume)
-      var(--price) var(--trades) var(--price) var(--price);
-  }
-
-  @variant @last-volume {
-    --ticker-columns:
-      var(--pair) var(--price) var(--last-volume) var(--price) var(--price) var(--usd-volume) var(--volume)
       var(--price) var(--trades) var(--price) var(--price);
   }
 }

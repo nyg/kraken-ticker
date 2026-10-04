@@ -1,4 +1,4 @@
-const url = 'wss://ws.kraken.com'
+const url = 'wss://ws.kraken.com/v2'
 
 // Kraken silently ignores a subscription that lists every pair at once.
 const pairsPerSubscription = 100
@@ -6,7 +6,7 @@ const pairsPerSubscription = 100
 const initialReconnectDelayMs = 1000
 const maxReconnectDelayMs = 30000
 
-export function initWebSocket({ pairs, handleTickerMessage }) {
+export function initWebSocket({ handleTickerMessage }) {
 
   let ws
   let reconnectTimer
@@ -18,11 +18,11 @@ export function initWebSocket({ pairs, handleTickerMessage }) {
 
     ws.onopen = () => {
       reconnectAttempts = 0
-      subscribeToTickers(ws, pairs)
+      subscribeToInstruments(ws)
     }
 
     ws.onmessage = event => {
-      handleMessage(JSON.parse(event.data), { handleTickerMessage })
+      handleMessage(JSON.parse(event.data), { ws, handleTickerMessage })
     }
 
     ws.onerror = event => {
@@ -48,43 +48,48 @@ export function initWebSocket({ pairs, handleTickerMessage }) {
 const reconnectDelay = attempts =>
   Math.min(initialReconnectDelayMs * 2 ** attempts, maxReconnectDelayMs)
 
+const subscribeToInstruments = ws => {
+  ws.send(JSON.stringify({
+    method: 'subscribe',
+    params: {
+      channel: 'instrument'
+    }
+  }))
+}
+
 const subscribeToTickers = (ws, pairs) => {
   for (let start = 0; start < pairs.length; start += pairsPerSubscription) {
     ws.send(JSON.stringify({
-      event: 'subscribe',
-      pair: pairs.slice(start, start + pairsPerSubscription),
-      subscription: {
-        name: 'ticker'
+      method: 'subscribe',
+      params: {
+        channel: 'ticker',
+        symbol: pairs.slice(start, start + pairsPerSubscription)
       }
     }))
   }
 }
 
-const handleMessage = (data, { handleTickerMessage }) => {
-  if (data.hasOwnProperty('event')) {
-
-    switch (data.event) {
-      case 'subscriptionStatus':
-        if (data.status === 'error') {
-          console.error('Subscription error:', data.pair, data.errorMessage)
-        }
-        break
-      case 'heartbeat':
-      case 'systemStatus':
-        break
-      default:
-        console.error('Unknown event:', data.event)
-        break
+const handleMessage = (message, { ws, handleTickerMessage }) => {
+  if (message.hasOwnProperty('method')) {
+    if (!message.success) {
+      console.error('Request error:', message.method, message.symbol, message.error)
     }
   }
   else {
-    const [, ticker, channel, pair] = data
-    switch (channel) {
+    switch (message.channel) {
+      case 'instrument':
+        if (message.type === 'snapshot') {
+          subscribeToTickers(ws, message.data.pairs.map(pair => pair.symbol))
+        }
+        break
       case 'ticker':
-        handleTickerMessage(ticker, pair)
+        message.data.forEach(handleTickerMessage)
+        break
+      case 'heartbeat':
+      case 'status':
         break
       default:
-        console.error('Unknown channel:', channel)
+        console.error('Unknown channel:', message.channel)
         break
     }
   }
