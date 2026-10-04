@@ -2,10 +2,11 @@
 
 /* Each breakpoint is the sum of the minimum widths of the columns it shows. */
 @theme {
-  --container-bid-ask: 85ch;
-  --container-low-high: 121ch;
-  --container-vwap-trades: 148ch;
-  --container-volume: 171ch;
+  --container-volume-share: 58ch;
+  --container-bid-ask: 94ch;
+  --container-low-high: 130ch;
+  --container-vwap-trades: 157ch;
+  --container-volume: 180ch;
 }
 
 table {
@@ -17,6 +18,10 @@ table {
 
   --ticker-columns: var(--pair) var(--price) var(--usd-volume);
   --ticker-min-width: 49ch;
+
+  @variant @volume-share {
+    --usd-volume: minmax(24ch, 22fr);
+  }
 
   @variant @bid-ask {
     --ticker-columns: var(--pair) var(--price) var(--price) var(--price) var(--usd-volume);

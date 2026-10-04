@@ -6,7 +6,7 @@ const pairsPerSubscription = 100
 const initialReconnectDelayMs = 1000
 const maxReconnectDelayMs = 30000
 
-export function initWebSocket({ handleTickerMessage }) {
+export function initWebSocket({ handleTickerMessage, handleTradeMessage }) {
 
   let ws
   let reconnectTimer
@@ -22,7 +22,7 @@ export function initWebSocket({ handleTickerMessage }) {
     }
 
     ws.onmessage = event => {
-      handleMessage(JSON.parse(event.data), { ws, handleTickerMessage })
+      handleMessage(JSON.parse(event.data), { ws, handleTickerMessage, handleTradeMessage })
     }
 
     ws.onerror = event => {
@@ -57,19 +57,25 @@ const subscribeToInstruments = ws => {
   }))
 }
 
-const subscribeToTickers = (ws, pairs) => {
+const subscribeToPairs = (ws, channel, pairs, options) => {
   for (let start = 0; start < pairs.length; start += pairsPerSubscription) {
     ws.send(JSON.stringify({
       method: 'subscribe',
       params: {
-        channel: 'ticker',
-        symbol: pairs.slice(start, start + pairsPerSubscription)
+        channel,
+        symbol: pairs.slice(start, start + pairsPerSubscription),
+        ...options
       }
     }))
   }
 }
 
-const handleMessage = (message, { ws, handleTickerMessage }) => {
+const handleInstruments = (ws, pairs) => {
+  subscribeToPairs(ws, 'ticker', pairs)
+  subscribeToPairs(ws, 'trade', pairs, { snapshot: false })
+}
+
+const handleMessage = (message, { ws, handleTickerMessage, handleTradeMessage }) => {
   if (message.hasOwnProperty('method')) {
     if (!message.success) {
       console.error('Request error:', message.method, message.symbol, message.error)
@@ -79,11 +85,14 @@ const handleMessage = (message, { ws, handleTickerMessage }) => {
     switch (message.channel) {
       case 'instrument':
         if (message.type === 'snapshot') {
-          subscribeToTickers(ws, message.data.pairs.map(pair => pair.symbol))
+          handleInstruments(ws, message.data.pairs.map(pair => pair.symbol))
         }
         break
       case 'ticker':
         message.data.forEach(handleTickerMessage)
+        break
+      case 'trade':
+        message.data.forEach(handleTradeMessage)
         break
       case 'heartbeat':
       case 'status':

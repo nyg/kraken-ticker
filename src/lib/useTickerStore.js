@@ -9,3 +9,7 @@ export function useTicker(pair) {
 export function useTickerOrder() {
   return useSyncExternalStore(tickerStore.subscribeToOrder, tickerStore.getOrder)
 }
+
+export function useMarketStats() {
+  return useSyncExternalStore(tickerStore.subscribeToStats, tickerStore.getStats)
+}

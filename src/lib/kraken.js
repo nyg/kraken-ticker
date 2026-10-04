@@ -10,3 +10,10 @@ export function toTicker(message) {
     last24HighPrice: message.high,
   }
 }
+
+export function toTrade(message) {
+  return {
+    price: message.price,
+    quantity: message.qty,
+  }
+}

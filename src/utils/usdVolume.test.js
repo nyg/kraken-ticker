@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { usdVolume } from './usdVolume.js'
+import { usdValue, usdVolume } from './usdVolume.js'
 
 test('should_multiply_volume_by_vwap_when_quote_is_usd', () => {
   // Given
@@ -42,6 +42,25 @@ test('should_return_undefined_when_quote_has_no_usd_rate', () => {
 
   // When
   const result = usdVolume('XBT/EUR', ticker, new Map())
+
+  // Then
+  expect(result).toBeUndefined()
+})
+
+test('should_convert_quote_amount_with_last_price_when_quote_has_direct_usd_pair', () => {
+  // Given
+  const tickers = new Map([['EUR/USD', { lastTradePrice: 1.25 }]])
+
+  // When
+  const result = usdValue('XBT/EUR', 40000, tickers)
+
+  // Then
+  expect(result).toBe(50000)
+})
+
+test('should_return_undefined_value_when_quote_has_no_usd_rate', () => {
+  // When
+  const result = usdValue('XBT/EUR', 40000, new Map())
 
   // Then
   expect(result).toBeUndefined()

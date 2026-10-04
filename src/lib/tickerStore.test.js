@@ -126,3 +126,85 @@ test('should_stop_notifying_when_listener_unsubscribes', () => {
   // Then
   expect(listener).not.toHaveBeenCalled()
 })
+
+test('should_count_trades_and_sum_usd_volume_when_trades_are_recorded', () => {
+  // Given
+  const unit = createTickerStore({ scheduleFrame: () => { } })
+  unit.update('EUR/USD', { last24Volume: 1000, last24VWAP: 1.25, lastTradePrice: 1.25 })
+
+  // When
+  unit.recordTrade('XBT/USD', { price: 50000, quantity: 2 })
+  unit.recordTrade('XBT/EUR', { price: 40000, quantity: 1 })
+
+  // Then
+  expect(unit.getStats()).toMatchObject({ sessionTradeCount: 2, sessionUsdVolume: 150000 })
+})
+
+test('should_count_trade_without_volume_when_quote_has_no_usd_rate', () => {
+  // Given
+  const unit = createTickerStore({ scheduleFrame: () => { } })
+
+  // When
+  unit.recordTrade('DOGE/GBP', { price: 1, quantity: 1000 })
+
+  // Then
+  expect(unit.getStats()).toMatchObject({ sessionTradeCount: 1, sessionUsdVolume: 0 })
+})
+
+test('should_notify_stats_listener_once_per_frame_when_several_trades_are_recorded', () => {
+  // Given
+  const frames = []
+  const unit = createTickerStore({ scheduleFrame: frame => frames.push(frame) })
+  const listener = vi.fn()
+  unit.subscribeToStats(listener)
+
+  // When
+  unit.recordTrade('XBT/USD', { price: 50000, quantity: 1 })
+  unit.recordTrade('XBT/USD', { price: 50001, quantity: 1 })
+  frames.forEach(frame => frame())
+
+  // Then
+  expect(frames).toHaveLength(1)
+  expect(listener).toHaveBeenCalledOnce()
+})
+
+test('should_total_last_24_hours_and_share_usd_volume_when_new_pairs_arrive', () => {
+  // Given
+  const frames = []
+  const unit = createTickerStore({ scheduleFrame: frame => frames.push(frame) })
+
+  // When
+  unit.update('XBT/USD', { last24Volume: 6, last24VWAP: 50000, lastTradePrice: 50000, last24TradeCount: 30 })
+  unit.update('ETH/USD', { last24Volume: 50, last24VWAP: 2000, lastTradePrice: 2000, last24TradeCount: 10 })
+  unit.update('DOGE/GBP', { last24Volume: 1000000, last24VWAP: 1, lastTradePrice: 1, last24TradeCount: 5 })
+  frames.forEach(frame => frame())
+
+  // Then
+  expect(unit.getStats()).toMatchObject({ last24TradeCount: 45, last24UsdVolume: 400000 })
+  expect(unit.getTicker('XBT/USD').last24UsdVolumeShare).toBe(0.75)
+  expect(unit.getTicker('ETH/USD').last24UsdVolumeShare).toBe(0.25)
+  expect(unit.getTicker('DOGE/GBP').last24UsdVolumeShare).toBeUndefined()
+})
+
+test('should_keep_last_24_hours_totals_until_resort_when_volumes_change', () => {
+  // Given
+  const frames = []
+  const unit = createTickerStore({ scheduleFrame: frame => frames.push(frame) })
+  unit.update('XBT/USD', { last24Volume: 6, last24VWAP: 50000, lastTradePrice: 50000 })
+  unit.update('ETH/USD', { last24Volume: 50, last24VWAP: 2000, lastTradePrice: 2000 })
+  frames.splice(0).forEach(frame => frame())
+
+  // When
+  unit.update('ETH/USD', { last24Volume: 100, last24VWAP: 2000, lastTradePrice: 2000 })
+  frames.splice(0).forEach(frame => frame())
+  const statsBeforeResort = unit.getStats()
+  const shareBeforeResort = unit.getTicker('ETH/USD').last24UsdVolumeShare
+  unit.resort()
+
+  // Then
+  expect(statsBeforeResort.last24UsdVolume).toBe(400000)
+  expect(shareBeforeResort).toBe(0.5)
+  expect(unit.getStats().last24UsdVolume).toBe(500000)
+  expect(unit.getTicker('ETH/USD').last24UsdVolumeShare).toBe(0.4)
+  expect(unit.getTicker('XBT/USD').last24UsdVolumeShare).toBe(0.6)
+})

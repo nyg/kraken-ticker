@@ -1,8 +1,12 @@
 const usd = 'USD'
 
 export function usdVolume(pair, ticker, tickers) {
+  return usdValue(pair, ticker.last24Volume * ticker.last24VWAP, tickers)
+}
+
+export function usdValue(pair, quoteAmount, tickers) {
   const rate = usdRate(quoteOf(pair), tickers)
-  return rate === undefined ? undefined : ticker.last24Volume * ticker.last24VWAP * rate
+  return rate === undefined ? undefined : quoteAmount * rate
 }
 
 function quoteOf(pair) {
