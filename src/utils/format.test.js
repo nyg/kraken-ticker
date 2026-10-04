@@ -1,5 +1,5 @@
 import { expect, test, vi } from 'vitest'
-import { asDecimal, splitTrailingZeroes } from './format.js'
+import { asDecimal, asPercent, splitTrailingZeroes } from './format.js'
 
 vi.hoisted(() => vi.stubGlobal('navigator', { language: 'en-GB' }))
 
@@ -89,4 +89,20 @@ test('should_split_when_decimal_separator_is_a_comma', () => {
 
   // Then
   expect(result).toEqual({ value: '1 034,5', trailingZeroes: '0000' })
+})
+
+test('should_round_to_two_fraction_digits_when_ratio_is_formatted_as_percent', () => {
+  // When
+  const result = asPercent(0.123456)
+
+  // Then
+  expect(result).toBe('12.35%')
+})
+
+test('should_pad_to_two_fraction_digits_when_ratio_is_zero', () => {
+  // When
+  const result = asPercent(0)
+
+  // Then
+  expect(result).toBe('0.00%')
 })

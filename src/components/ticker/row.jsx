@@ -12,7 +12,7 @@ export default memo(function TickerRow({ pair }) {
       <TickerCell decimal data={ticker.lastTradePrice} />
       <TickerCell className="hidden @bid-ask:block" decimal data={ticker.bidPrice} />
       <TickerCell className="hidden @bid-ask:block" decimal data={ticker.askPrice} />
-      <TickerCell className="@max-low-high:border-r-0" integer data={ticker.last24UsdVolume} />
+      <TickerCell className="@max-low-high:border-r-0" integer data={ticker.last24UsdVolume} share={ticker.last24UsdVolumeShare} />
       <TickerCell className="hidden @volume:block" decimal data={ticker.last24Volume} />
       <TickerCell className="hidden @vwap-trades:block" decimal data={ticker.last24VWAP} />
       <TickerCell className="hidden @vwap-trades:block" integer data={ticker.last24TradeCount} />

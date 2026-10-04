@@ -26,6 +26,12 @@ export function asInteger(number) {
   return integerFormatter.format(number)
 }
 
+// Appends the sign itself: the percent style adds a space in some locales and would overflow the share box.
+const percentFormatter = new Intl.NumberFormat(locales, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+export function asPercent(ratio) {
+  return `${percentFormatter.format(ratio * 100)}%`
+}
+
 export function splitTrailingZeroes(decimal) {
   return decimal.match(/^(?<value>.*\D0|.*[^0])(?<trailingZeroes>0*)$/).groups
 }
