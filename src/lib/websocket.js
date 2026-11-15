@@ -76,7 +76,7 @@ const handleInstruments = (ws, pairs) => {
 }
 
 const handleMessage = (message, { ws, handleTickerMessage, handleTradeMessage }) => {
-   if (message.hasOwnProperty('method')) {
+   if (Object.hasOwn(message, 'method')) {
       if (!message.success) {
          console.error('Request error:', message.method, message.symbol, message.error)
       }
